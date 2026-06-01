@@ -237,6 +237,23 @@ section[data-testid="stSidebar"] .stSlider [data-baseweb="slider"] {
     margin-bottom: 0.8rem;
 }
 
+/* ── Tab content wrapper — subtle outer border per tab panel ── */
+.stTabs [data-baseweb="tab-panel"] {
+    border: 1px solid #F1F5F9 !important;
+    border-top: none !important;
+    border-radius: 0 0 14px 14px !important;
+    padding: 1.2rem 1rem 0.5rem 1rem !important;
+    background: #FAFCFF !important;
+}
+
+/* ── KPI row separator bottom ── */
+.kpi-section-end {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #BFDBFE 20%, #E2E8F0 50%, #BFDBFE 80%, transparent 100%);
+    margin: 1rem 0 1.4rem 0;
+    position: relative;
+}
+
 /* ── Summary Finding Card ── */
 .finding-item {
     background: white;
@@ -268,9 +285,24 @@ section[data-testid="stSidebar"] .stSlider [data-baseweb="slider"] {
 
 /* ── Divider ── */
 .div-line {
+    position: relative;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #E2E8F0 20%, #E2E8F0 80%, transparent);
-    margin: 1.4rem 0;
+    background: linear-gradient(90deg, transparent 0%, #BFDBFE 15%, #E2E8F0 50%, #BFDBFE 85%, transparent 100%);
+    margin: 1.6rem 0;
+    overflow: visible;
+}
+.div-line::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #93C5FD;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px #BFDBFE;
 }
 
 /* ── Stat chips ── */
@@ -463,13 +495,43 @@ with st.sidebar:
     age_min, age_max = int(df["umur"].min()), int(df["umur"].max())
     age_range = st.slider("Rentang Usia", age_min, age_max, (age_min, age_max), label_visibility="collapsed")
 
-    # ── Separator + Footer ──
+
+    # ── Sidebar Footer ──
     st.markdown("""
-    <div style="height:1px; background:rgba(255,255,255,0.12); margin: 1.3rem 0 1rem 0;"></div>
-    <div style="text-align:center; line-height:1.8;">
-        <div style="font-size:0.72rem; color:#93C5FD; font-weight:600;">Coding Camp 2026</div>
-        <div style="font-size:0.68rem; color:rgba(255,255,255,0.45);">DBS Foundation</div>
-        <div style="font-size:0.65rem; color:rgba(255,255,255,0.3);">CC26-PSU148</div>
+    <div style="margin-top:auto; padding-top:1.2rem;">
+        <div style="
+            height:1px;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin-bottom:1.1rem;
+        "></div>
+        <div style="
+            background:rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:12px;
+            padding:0.9rem 1rem;
+            text-align:center;
+        ">
+            <div style="font-size:0.72rem; font-weight:700; color:white;
+                        letter-spacing:0.08em; text-transform:uppercase;
+                        margin-bottom:0.5rem; opacity:0.9;">
+                Coding Camp 2026
+            </div>
+            <div style="height:1px; background:rgba(255,255,255,0.1); margin:0.4rem 0;"></div>
+            <div style="font-size:0.68rem; color:#93C5FD; font-weight:500;
+                        margin-bottom:0.25rem;">DBS Foundation</div>
+            <div style="
+                display:inline-block;
+                background:rgba(21,101,192,0.35);
+                border:1px solid rgba(147,197,253,0.3);
+                border-radius:20px;
+                padding:0.15rem 0.6rem;
+                font-size:0.62rem;
+                font-weight:600;
+                color:rgba(255,255,255,0.6);
+                letter-spacing:0.06em;
+                margin-top:0.2rem;
+            ">CC26-PSU148</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -487,38 +549,57 @@ if dff.empty:
     st.stop()
 
 # ==== HEADER UTAMA ====
-col_title, col_badge = st.columns([5, 1])
-with col_title:
-    st.markdown("""
-    <div style="margin-bottom: 0.1rem;">
-        <div style="font-family:'DM Serif Display',Georgia,serif; font-size:2rem;
-                    color:#0F172A; line-height:1.15; letter-spacing:-0.02em;">
-            MindCare
-            <span style="font-style:italic; color:#1565C0;"> Analytics</span>
+st.markdown("""
+<div style="
+    display:flex; align-items:flex-end; justify-content:space-between;
+    flex-wrap:wrap; gap:0.5rem;
+    padding: 0.4rem 0 0 0;
+">
+    <div>
+        <div style="font-family:'DM Serif Display',Georgia,serif; font-size:2.1rem;
+                    color:#0F172A; line-height:1.1; letter-spacing:-0.02em;">
+            MindCare<span style="font-style:italic; color:#1565C0;"> Analytics</span>
         </div>
-        <div style="font-size:0.85rem; color:#64748B; margin-top:0.3rem; font-weight:400;">
-            Dashboard Analitik Kesehatan Mental &nbsp;·&nbsp;
-            Coding Camp 2026 powered by DBS Foundation
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-with col_badge:
-    filter_count = len(dff)
-    st.markdown(f"""
-    <div style="text-align:right; padding-top:0.5rem;">
-        <div style="display:inline-block; background:linear-gradient(135deg,#EFF6FF,#DBEAFE);
-                    border:1px solid #BFDBFE; border-radius:10px; padding:0.5rem 0.9rem;">
-            <div style="font-size:0.62rem; color:#1565C0; font-weight:700;
-                        text-transform:uppercase; letter-spacing:0.08em;">Data Aktif</div>
-            <div style="font-size:1.3rem; font-weight:700; color:#1565C0;
-                        letter-spacing:-0.02em;">{filter_count:,}</div>
-            <div style="font-size:0.65rem; color:#94A3B8;">responden</div>
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.4rem; flex-wrap:wrap;">
+            <span style="font-size:0.78rem; color:#64748B; font-weight:400;">
+                Dashboard Analitik Kesehatan Mental
+            </span>
+            <span style="width:4px; height:4px; border-radius:50%; background:#CBD5E1; display:inline-block;"></span>
+            <span style="font-size:0.78rem; color:#94A3B8; font-weight:400;">
+                Coding Camp 2026 powered by DBS Foundation
+            </span>
+            <span style="width:4px; height:4px; border-radius:50%; background:#CBD5E1; display:inline-block;"></span>
+            <span style="font-size:0.78rem; color:#94A3B8; font-weight:400;">
+                CC26-PSU148
+            </span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    <div style="display:flex; align-items:center; gap:0.5rem; padding-bottom:0.2rem;">
+        <span style="font-size:0.7rem; color:#94A3B8; font-weight:500; text-transform:uppercase; letter-spacing:0.06em;">Data Science</span>
+        <span style="display:inline-flex; align-items:center; gap:0.35rem;
+                     background:#F0FDF4; border:1px solid #BBF7D0;
+                     border-radius:20px; padding:0.2rem 0.7rem;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#22C55E; display:inline-block;"></span>
+            <span style="font-size:0.7rem; font-weight:600; color:#15803D;">Dashboard Aktif</span>
+        </span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown('<div style="margin: 1rem 0 0.6rem 0; height:2px; background:linear-gradient(90deg,#1565C0 0%,#42A5F5 50%,transparent 100%); border-radius:2px;"></div>', unsafe_allow_html=True)
+# Divider utama: gradient biru + subtle dot pattern accent
+st.markdown("""
+<div style="margin: 0.8rem 0 1.2rem 0; position:relative;">
+    <div style="height:2px; background:linear-gradient(90deg,#1565C0 0%,#42A5F5 60%,#BFDBFE 85%,transparent 100%); border-radius:2px;"></div>
+    <div style="position:absolute; right:0; top:-3px;
+                display:flex; gap:4px; align-items:center;">
+        <span style="width:8px; height:8px; border-radius:50%; background:#1565C0; display:inline-block; opacity:0.9;"></span>
+        <span style="width:5px; height:5px; border-radius:50%; background:#42A5F5; display:inline-block; opacity:0.6;"></span>
+        <span style="width:3px; height:3px; border-radius:50%; background:#BFDBFE; display:inline-block; opacity:0.5;"></span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 # ==== HEADER UTAMA END ====
+
 
 # ==== KPI ROW ====
 avg_stress      = dff["stress_level_1_5"].mean()
@@ -549,7 +630,7 @@ with k4:
 with k5:
     st.markdown(kpi_card(SVG_STAR, "Aktivitas Dominan", top_act.title(), f"{top_act_pct:.1f}% dari total"), unsafe_allow_html=True)
 
-st.markdown('<div style="margin-top:1.2rem;"></div>', unsafe_allow_html=True)
+st.markdown('<div class="kpi-section-end"></div>', unsafe_allow_html=True)
 
 # ==== KPI ROW END ====
 
