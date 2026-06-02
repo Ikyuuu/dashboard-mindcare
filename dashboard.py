@@ -677,7 +677,7 @@ with tab1:
             height=300,
         )
         apply_grid(fig)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         insight(
             "Konsentrasi terbesar berada di <b>Level 3–4</b>, menunjukkan mayoritas responden mengalami "
             "stres menengah hingga tinggi. Level 5 (sangat tinggi) ditemukan pada "
@@ -713,7 +713,7 @@ with tab1:
             height=300,
         )
         apply_grid(fig2)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width='stretch')
         top_cause = cause_dist.iloc[0]
         insight(
             f"<b>{top_cause['Penyebab']}</b> menjadi penyebab stres paling dominan "
@@ -759,7 +759,7 @@ with tab1:
             height=420,
         )
         apply_grid(fig3)
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width='stretch')
 
     # ── Distribusi Usia per Stress Level ──
     with row2_r:
@@ -786,7 +786,7 @@ with tab1:
             height=420,
         )
         apply_grid(fig4)
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width='stretch')
 
     insight(
         "Tidak terdapat pola usia yang konsisten dan linier terhadap tingkat stres — stres tinggi "
@@ -823,7 +823,7 @@ with tab1:
             yaxis_title="Rata-rata Stress Level",
         )
         apply_grid(fig_g1)
-        st.plotly_chart(fig_g1, use_container_width=True)
+        st.plotly_chart(fig_g1, width='stretch')
 
     with gc2:
         gender_act = dff.groupby(["jenis_kelamin", "aktivitas_dipilih"]).size().reset_index(name="n")
@@ -852,7 +852,7 @@ with tab1:
             yaxis_range=[0, 75],
         )
         apply_grid(fig_g2)
-        st.plotly_chart(fig_g2, use_container_width=True)
+        st.plotly_chart(fig_g2, width='stretch')
 
 # ==== TAB 2 — FAKTOR PSIKOLOGIS & GAYA HIDUP ====
 with tab2:
@@ -902,7 +902,7 @@ with tab2:
                 height=280,
             )
             apply_grid(fig)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
 
     insight(
         "<b>Anxiety Score</b> menunjukkan kenaikan paling tajam seiring meningkatnya stress level "
@@ -940,7 +940,7 @@ with tab2:
             coloraxis_showscale=False,
         )
         apply_grid(fig_sl)
-        st.plotly_chart(fig_sl, use_container_width=True)
+        st.plotly_chart(fig_sl, width='stretch')
 
     with b2r:
         act_stress = dff.groupby("stress_level_1_5")["aktivitas_fisik_mnt"].mean().reset_index()
@@ -964,7 +964,7 @@ with tab2:
             coloraxis_showscale=False,
         )
         apply_grid(fig_af)
-        st.plotly_chart(fig_af, use_container_width=True)
+        st.plotly_chart(fig_af, width='stretch')
 
     insight(
         "<b>Korelasi negatif jelas:</b> semakin buruk kualitas tidur → semakin tinggi stress level. "
@@ -999,7 +999,7 @@ with tab2:
         height=340,
     )
     apply_grid(fig_sleep_dur)
-    st.plotly_chart(fig_sleep_dur, use_container_width=True)
+    st.plotly_chart(fig_sleep_dur, width='stretch')
 
 # ==== TAB 3 — REKOMENDASI AKTIVITAS ====
 with tab3:
@@ -1037,7 +1037,7 @@ with tab3:
         yaxis_range=[0, 105],
     )
     apply_grid(fig_cross)
-    st.plotly_chart(fig_cross, use_container_width=True)
+    st.plotly_chart(fig_cross, width='stretch')
     insight(
         "<b>Pergeseran pola aktivitas seiring kenaikan stres sangat signifikan:</b><br>"
         "• Level 1–2: Olahraga dominan (~40–44%) — pengguna aktif secara fisik.<br>"
@@ -1081,7 +1081,7 @@ with tab3:
             legend_title="Metrik",
         )
         apply_grid(fig_psych)
-        st.plotly_chart(fig_psych, use_container_width=True)
+        st.plotly_chart(fig_psych, width='stretch')
         insight(
             "Pengguna yang memilih <b>journaling</b> memiliki anxiety (12.05) dan depression (12.64) "
             "tertinggi, serta self-esteem terendah (16.25). <b>Olahraga</b> dipilih oleh responden "
@@ -1118,7 +1118,7 @@ with tab3:
             yaxis_range=[0, 60],
         )
         apply_grid(fig_dur)
-        st.plotly_chart(fig_dur, use_container_width=True)
+        st.plotly_chart(fig_dur, width='stretch')
 
         # Waktu luang threshold
         dff2 = dff.copy()
@@ -1147,7 +1147,7 @@ with tab3:
             yaxis_title="Durasi (menit)",
         )
         apply_grid(fig_wl)
-        st.plotly_chart(fig_wl, use_container_width=True)
+        st.plotly_chart(fig_wl, width='stretch')
         insight(
             "Waktu luang <b>&gt; 90 menit</b> secara konsisten menghasilkan rekomendasi durasi lebih panjang. "
             "Ini mengindikasikan sistem rekomendasi MindCare menyesuaikan intensitas intervensi "
@@ -1175,7 +1175,7 @@ with tab3:
         coloraxis_showscale=False,
         height=260,
     )
-    st.plotly_chart(fig_heat, use_container_width=True)
+    st.plotly_chart(fig_heat, width='stretch')
 
 # ==== TAB 4 — RINGKASAN TEMUAN ====
 with tab4:
@@ -1287,7 +1287,7 @@ with tab4:
             yaxis=dict(autorange="reversed"),
         )
         apply_grid(fig_src)
-        st.plotly_chart(fig_src, use_container_width=True)
+        st.plotly_chart(fig_src, width='stretch')
 
     with info_col:
         st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
