@@ -1,3 +1,7 @@
+# MindCare Dashboard
+
+**MindCare Dashboard** adalah aplikasi berbasis **Streamlit** yang dirancang untuk membantu pengguna dalam **mendeteksi, memahami, dan mengelola tingkat stres secara mandiri dan berkelanjutan** melalui visualisasi data dan analisis interaktif. Aplikasi ini bertujuan untuk meningkatkan kesadaran terhadap kesehatan mental dengan menyediakan pendekatan yang mudah diakses, sehingga pengguna dapat melakukan pemantauan kondisi psikologis secara lebih mandiri.
+
 ## Cara Menjalankan Project
 
 Ikuti langkah berikut untuk menjalankan project secara lokal:
@@ -32,9 +36,8 @@ streamlit run dashboard.py
 
 ### 5. Akses Dashboard
 
-Jika dashboard tidak terbuka otomatis di browser, buka link berikut secara manual:
+Jika dashboard tidak terbuka otomatis di browser, akses melalui:
 
 ```text
 http://localhost:8501
 ```
-
