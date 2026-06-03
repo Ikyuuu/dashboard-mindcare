@@ -1428,7 +1428,7 @@ with tab4:
          "menunjukkan penyesuaian sistem terhadap ketersediaan waktu.",
          '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'),
         ("BQ6", "Feature Selection", "Fitur Preferensi + Psikologis",
-         "Kolom preferensi (olahraga, baca, jurnal) dan skor psikologis memiliki korelasi |r| ≥ 0.15 "
+         "Kolom preferensi (olahraga, baca, jurnal, skala 1–4) dan skor psikologis memiliki korelasi |r| ≥ 0.15 "
          "terhadap target — fitur paling relevan untuk model KNN.",
          '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>'),
     ]
@@ -1555,8 +1555,10 @@ with tab4:
         "dibanding pengguna olahraga, memvalidasi kemampuan diskriminatif fitur engineered.<br>"
         "<b>4. Feature Selection</b> — Fitur preferensi dan skor psikologis memiliki korelasi paling tinggi "
         "terhadap target aktivitas, menjadi fondasi utama model KNN.<br>"
-        "<b>5. A/B Testing</b> — Performa Model A dan Model B tidak menunjukkan perbedaan signifikan secara "
-        "statistik (p = 0,1058), mengkonfirmasi stabilitas pendekatan pemodelan yang digunakan.<br><br>"
+        "<b>5. A/B Testing</b> — Paired t-test two-tailed menunjukkan perbedaan <b>signifikan</b> antara "
+        "Model A dan Model B (t = −2.44, p = 0,038 &lt; α = 0,05), dikonfirmasi oleh Wilcoxon (p = 0,049). "
+        "Model A (22 fitur original) lebih baik dari Model B (29 fitur engineered) dengan Δ CV F1 = −0,0079, "
+        "mengindikasikan penambahan fitur engineered justru menurunkan performa KNN akibat curse of dimensionality.<br><br>"
         "Secara keseluruhan, dataset MindCare memiliki kualitas baik, pola hubungan antarvariabel yang "
         "bermakna, serta indikasi kuat bahwa personalisasi berbasis kondisi psikologis dan gaya hidup "
         "memang diperlukan untuk sistem rekomendasi yang adaptif dan relevan."
