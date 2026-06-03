@@ -340,7 +340,6 @@ def plotly_chart(fig, height=None):
 
 
 # LOAD DATA
-
 @st.cache_data
 def load_data(path: str) -> pd.DataFrame:
     return pd.read_csv(path)
@@ -412,7 +411,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # Filter: Stress Level
+    # Filter Stress Level
     stress_opts = sorted(df["stress_level_1_5"].dropna().unique())
     stress_label_map = {lvl: f"Level {lvl}" for lvl in stress_opts}
     stress_label_map_inv = {v: k for k, v in stress_label_map.items()}
@@ -424,21 +423,21 @@ with st.sidebar:
     else:
         stress_sel = [stress_label_map_inv[sel_stress_label]] if sel_stress_label in stress_label_map_inv else stress_opts
 
-    # Filter: Jenis Kelamin
+    # Filter Jenis Kelamin
     gender_opts = sorted(df["jenis_kelamin"].dropna().unique().tolist())
     gender_dropdown_opts = ["Semua Gender"] + gender_opts
 
     sel_gender_label = st.selectbox("Jenis Kelamin", options=gender_dropdown_opts, index=0)
     gender_sel = gender_opts if sel_gender_label == "Semua Gender" else [sel_gender_label]
 
-    # Filter: Penyebab Stres
+    # Filter Penyebab Stres
     cause_opts = sorted(df["penyebab_stres"].dropna().unique().tolist())
     cause_dropdown_opts = ["Semua Penyebab"] + cause_opts
 
     sel_cause_label = st.selectbox("Penyebab Stres", options=cause_dropdown_opts, index=0)
     cause_sel = cause_opts if sel_cause_label == "Semua Penyebab" else [sel_cause_label]
 
-    # Filter: Rentang Usia
+    # Filter Rentang Usia
     st.markdown("""
     <div style="font-size:0.70rem; font-weight:600; color:#93C5FD;
                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.1rem; margin-top:0.3rem;">
@@ -469,7 +468,6 @@ with st.sidebar:
 
 
 # FILTER DATA
-
 mask = (
     df["stress_level_1_5"].isin(stress_sel) &
     df["jenis_kelamin"].isin(gender_sel) &
@@ -479,12 +477,11 @@ mask = (
 dff = df[mask].copy()
 
 if dff.empty:
-    st.warning("⚠️ Tidak ada data yang sesuai dengan filter yang dipilih. Coba ubah kombinasi filter.")
+    st.warning("Tidak ada data yang sesuai dengan filter yang dipilih. Coba ubah kombinasi filter.")
     st.stop()
 
 
 # HEADER UTAMA
-
 st.markdown("""
 <div style="display:flex; align-items:flex-end; justify-content:space-between;
             flex-wrap:wrap; gap:0.5rem; padding: 0.4rem 0 0 0;">
@@ -530,7 +527,6 @@ st.markdown("""
 
 
 # KPI ROW
-
 avg_stress      = dff["stress_level_1_5"].mean()
 pct_high_stress = (dff["stress_level_1_5"] >= 4).mean() * 100
 avg_anxiety     = dff["anxiety_score"].mean()
@@ -561,8 +557,7 @@ with k5:
 st.markdown('<div class="kpi-section-end"></div>', unsafe_allow_html=True)
 
 
-# AB NAVIGASI
-
+# TAB NAVIGASI
 tab1, tab2, tab3, tab4 = st.tabs([
     "Profil & Demografi",
     "Faktor Psikologis & Gaya Hidup",
@@ -572,7 +567,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
 
 
 # TAB 1: PROFIL & DEMOGRAFI
-
 with tab1:
 
     row1_l, row1_r = st.columns(2)
@@ -619,7 +613,7 @@ with tab1:
             f"Distribusi tingkat stres menunjukkan bahwa <b>{pct_level_3_4:.1f}%</b> responden terkonsentrasi "
             "pada <b>Level 3–4 (Sedang–Tinggi)</b>, menjadikannya segmen psikologis terbesar dalam dataset. "
             f"Kelompok <b>Level 5 (Sangat Tinggi)</b> mencakup <b>{cnt_level_5:,} responden "
-            f"({pct_level_5:.1f}%)</b> — segmen prioritas yang paling rentan dan paling membutuhkan intervensi. "
+            f"({pct_level_5:.1f}%)</b> segmen prioritas yang paling rentan dan paling membutuhkan intervensi. "
             f"Hanya <b>{pct_level_1_2:.1f}%</b> responden berada di Level 1–2, mengindikasikan bahwa kondisi "
             "psikologis sehat merupakan minoritas dalam populasi ini. Konsentrasi tinggi pada stres menengah–tinggi "
             "menunjukkan urgensi intervensi preventif pada Level 3–4 sebelum eskalasi ke Level 5."
@@ -769,7 +763,7 @@ with tab1:
         apply_grid(fig4)
         plotly_chart(fig4)
 
-    # Insight usia — di luar columns agar full width
+    # Insight usia
     age_by_stress = dff.groupby("stress_level_1_5")["umur"].agg(["mean", "std"]).round(2)
     all_levels = sorted(dff["stress_level_1_5"].unique())
     lvl_min = all_levels[0]
@@ -779,7 +773,7 @@ with tab1:
     avg_std  = age_by_stress["std"].mean()
 
     insight(
-        "Distribusi usia per tingkat stres tidak menunjukkan pola linier yang konsisten — stres tinggi "
+        "Distribusi usia per tingkat stres tidak menunjukkan pola linier yang konsisten stres tinggi "
         "(Level 4–5) dijumpai di hampir seluruh rentang usia, menegaskan bahwa stres bersifat "
         f"<b>lintas generasi</b> dan tidak dapat diprediksi semata dari usia. "
         f"Rata-rata usia pada Level {lvl_min} adalah <b>{mean_min:.0f} tahun</b>, "
@@ -850,6 +844,7 @@ with tab1:
         apply_grid(fig_g2)
         plotly_chart(fig_g2)
 
+    # Insight gender
     gs_male   = gender_stress[gender_stress["Gender"] == "Male"]["Avg Stress"].values
     gs_female = gender_stress[gender_stress["Gender"] == "Female"]["Avg Stress"].values
     stress_male   = round(float(gs_male[0]), 2)   if len(gs_male)   > 0 else 0.0
@@ -863,9 +858,9 @@ with tab1:
 
     insight(
         f"Rata-rata stress level <b>Male ({stress_male})</b> dan <b>Female ({stress_female})</b> "
-        f"hanya berbeda <b>{delta_gender} poin</b> — selisih yang sangat kecil, mengindikasikan "
+        f"hanya berbeda <b>{delta_gender} poin</b> selisih yang sangat kecil, mengindikasikan "
         "bahwa gender bukan faktor penentu utama tingkat stres dalam dataset ini. "
-        f"Namun preferensi aktivitas menunjukkan pola yang lebih berbeda: "
+        f"Namun preferensi aktivitas menunjukkan pola yang lebih berbeda dimana "
         f"<b>Male</b> paling banyak memilih <b>{dom_male}</b> "
         f"({ga_male.get(dom_male, 0):.1f}%), sementara <b>Female</b> condong ke "
         f"<b>{dom_female}</b> ({ga_female.get(dom_female, 0):.1f}%). "
@@ -875,7 +870,6 @@ with tab1:
 
 
 # TAB 2: FAKTOR PSIKOLOGIS & GAYA HIDUP
-
 with tab2:
 
     section_header("BQ1", "Faktor Psikologis vs Tingkat Stres")
@@ -1014,15 +1008,15 @@ with tab2:
         delta_sleep = "N/A"
 
     insight(
-        f"<b>Korelasi negatif kuat antara kualitas tidur dan tingkat stres:</b> responden dengan kualitas tidur "
+        f"Korelasi negatif kuat antara kualitas tidur dan tingkat stres yang dimana responden dengan kualitas tidur "
         f"= 1 (Buruk) memiliki rata-rata stress level <b>{sleep_kq1}</b>, "
-        f"sementara kualitas tidur = 5 (Sangat Baik) turun signifikan ke <b>{sleep_kq5}</b> "
+        f"sementara kualitas tidur = nilai 5 (Sangat Baik) turun signifikan ke <b>{sleep_kq5}</b> "
         f"(delta sebesar <b>{delta_sleep} poin</b>). "
         "Ini menempatkan kualitas tidur sebagai salah satu prediktor gaya hidup paling relevan. "
         f"Pola serupa terkonfirmasi pada aktivitas fisik: responden Level {lvl_lo} rata-rata aktif "
         f"<b>{act_lvl_lo} menit/hari</b>, dibanding Level {lvl_hi} yang hanya "
-        f"<b>{act_lvl_hi} menit/hari</b>. Ini mengindikasikan hubungan dua arah: "
-        "stres tinggi menurunkan motivasi aktivitas fisik, dan minimnya aktivitas fisik memperparah stres."
+        f"<b>{act_lvl_hi} menit/hari</b>. Ini mengindikasikan hubungan dua arah dimana "
+        "stres tinggi menurunkan motivasi aktivitas fisik dan minimnya aktivitas fisik memperparah stres."
     )
 
     divider()
@@ -1086,7 +1080,7 @@ with tab2:
         f"Garis rata-rata antar level mengungkap tren yang berarti: responden <b>Level {lvl_lo}</b> rata-rata tidur "
         f"<b>{sleep_lo} jam/malam</b>, sedangkan <b>Level {lvl_hi}</b> turun ke <b>{sleep_hi} jam/malam</b> "
         f"(selisih <b>{sleep_delta} jam</b>). "
-        "Durasi tidur saja tidak cukup sebagai prediktor tunggal — kombinasinya dengan "
+        "Durasi tidur saja tidak cukup sebagai prediktor tunggal kombinasinya dengan "
         "<i>kualitas tidur</i> menghasilkan gambaran yang jauh lebih lengkap. "
         "Pengguna dengan durasi tidur pendek <i>dan</i> kualitas buruk secara bersamaan "
         "adalah segmen prioritas yang perlu mendapat rekomendasi aktivitas relaksasi lebih intensif."
@@ -1094,7 +1088,6 @@ with tab2:
 
 
 # TAB 3: REKOMENDASI AKTIVITAS
-
 with tab3:
 
     section_header("BQ3", "Distribusi Aktivitas per Tingkat Stres")
@@ -1140,39 +1133,59 @@ with tab3:
             return 0.0
 
     insight(
-        "<b>Pergeseran pola aktivitas seiring kenaikan stres sangat signifikan dan membentuk tiga fase jelas:</b><br><br>"
+        "<b>Pergeseran pola aktivitas seiring kenaikan stres sangat signifikan dan membentuk tiga fase jelas:</b><br>"
         f"> <b>Level 1–2 (Stres Rendah):</b> Olahraga mendominasi "
-        f"(Level 1: {_get(cross_act,1,'olahraga')}%, Level 2: {_get(cross_act,2,'olahraga')}%) — "
+        f"(Level 1: {_get(cross_act,1,'olahraga')}%, Level 2: {_get(cross_act,2,'olahraga')}%) "
         "responden dalam kondisi stabil cenderung memilih aktivitas fisik yang proaktif.<br>"
         f"> <b>Level 3 (Stres Sedang):</b> Membaca mengambil alih posisi dominan "
         f"({_get(cross_act,3,'membaca')}%) — fase transisi di mana kebutuhan kognitif dan relaksasi "
         "mulai menggeser preferensi aktivitas fisik.<br>"
         f"> <b>Level 4–5 (Stres Tinggi–Sangat Tinggi):</b> Journaling melonjak drastis "
-        f"(Level 4: {_get(cross_act,4,'journaling')}%, Level 5: {_get(cross_act,5,'journaling')}%) — "
+        f"(Level 4: {_get(cross_act,4,'journaling')}%, Level 5: {_get(cross_act,5,'journaling')}%) "
         "mencerminkan kebutuhan mendalam untuk memproses emosi dan melepaskan beban psikologis. "
         "Pola ini memvalidasi pendekatan rekomendasi berbasis stress level: personalisasi adalah keharusan."
     )
 
     divider()
 
-    a3_l, a3_r = st.columns(2)
-
     # BQ4: Profil Psikologis per Aktivitas
-    with a3_l:
-        section_header("BQ4", "Profil Psikologis per Aktivitas")
+    section_header("BQ4", "Profil Psikologis per Aktivitas")
+
+    psych_act_agg = dff.groupby("aktivitas_dipilih")[
+        ["anxiety_score", "depression_score", "self_esteem_score"]
+    ].mean().round(2)
+
+    def _pa(act, col):
+        try:
+            return psych_act_agg.loc[act, col]
+        except (KeyError, TypeError):
+            return 0.0
+
+    bq4_chart, bq4_insight = st.columns([3, 2])
+
+    with bq4_chart:
         psych_by_act = dff.groupby("aktivitas_dipilih")[
             ["anxiety_score", "depression_score", "self_esteem_score"]
         ].mean().reset_index()
-        psych_melt = psych_by_act.melt(id_vars="aktivitas_dipilih", var_name="Metrik", value_name="Rata-rata")
+        psych_melt = psych_by_act.melt(
+            id_vars="aktivitas_dipilih", var_name="Metrik", value_name="Rata-rata"
+        )
         psych_melt["Metrik"] = psych_melt["Metrik"].map({
             "anxiety_score":     "Anxiety",
             "depression_score":  "Depression",
             "self_esteem_score": "Self-Esteem",
         })
+        
+        psych_melt["Aktivitas"] = psych_melt["aktivitas_dipilih"].str.title()
+
         fig_psych = px.bar(
-            psych_melt, x="aktivitas_dipilih", y="Rata-rata", color="Metrik",
+            psych_melt, x="Aktivitas", y="Rata-rata", color="Metrik",
             barmode="group",
-            color_discrete_sequence=["#1565C0", "#1976D2", "#42A5F5"],
+            color_discrete_map={
+                "Anxiety":     "#1565C0",
+                "Depression":  "#1976D2",
+                "Self-Esteem": "#42A5F5",
+            },
             text="Rata-rata",
         )
         fig_psych.update_traces(
@@ -1183,50 +1196,70 @@ with tab3:
         fig_psych.update_layout(
             **PLOTLY_LAYOUT,
             title="Skor Psikologis Rata-rata per Aktivitas",
-            xaxis_title="Aktivitas",
+            xaxis_title="",
             yaxis_title="Rata-rata Skor",
             legend_title="Metrik",
+            legend=dict(
+                orientation="h",
+                yanchor="bottom", y=1.02,
+                xanchor="right",  x=1,
+            ),
+            height=340,
         )
+        fig_psych.update_layout(margin=dict(l=16, r=16, t=56, b=16))
         apply_grid(fig_psych)
         plotly_chart(fig_psych)
 
-        psych_act_agg = dff.groupby("aktivitas_dipilih")[
-            ["anxiety_score", "depression_score", "self_esteem_score"]
-        ].mean().round(2)
+    with bq4_insight:
+        st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="insight-box" style="margin-top:0; height:calc(100% - 0.5rem);">
+            Pengguna <b>Journaling</b> memiliki profil psikologis paling berat:
+            anxiety <b>{_pa('journaling','anxiety_score')}</b>,
+            depression <b>{_pa('journaling','depression_score')}</b>,
+            self-esteem terendah <b>{_pa('journaling','self_esteem_score')}</b>
+            mengkonfirmasi journaling sebagai intervensi saat kondisi paling tertekan.<br><br>
+            Pengguna <b>Olahraga</b> menunjukkan kondisi paling sehat:
+            anxiety <b>{_pa('olahraga','anxiety_score')}</b>,
+            depression <b>{_pa('olahraga','depression_score')}</b>,
+            self-esteem tertinggi <b>{_pa('olahraga','self_esteem_score')}</b>.<br><br>
+            Pengguna <b>Membaca</b> berada di tengah spektrum
+            (anxiety: {_pa('membaca','anxiety_score')},
+            depression: {_pa('membaca','depression_score')},
+            self-esteem: {_pa('membaca','self_esteem_score')}),
+            membentuk <i>gradient psikologis</i> yang gradual antar ketiga aktivitas.
+        </div>
+        """, unsafe_allow_html=True)
 
-        def _pa(act, col):
-            try:
-                return psych_act_agg.loc[act, col]
-            except (KeyError, TypeError):
-                return 0.0
+    divider()
 
-        insight(
-            f"Pengguna <b>Journaling</b> memiliki profil psikologis paling berat: anxiety score "
-            f"<b>{_pa('journaling','anxiety_score')}</b>, depression score "
-            f"<b>{_pa('journaling','depression_score')}</b>, dan self-esteem terendah "
-            f"<b>{_pa('journaling','self_esteem_score')}</b> — mengkonfirmasi journaling sebagai "
-            "intervensi yang dipilih saat kondisi psikologis paling tertekan. "
-            f"Sebaliknya, pengguna <b>Olahraga</b> menunjukkan kondisi psikologis paling sehat: "
-            f"anxiety <b>{_pa('olahraga','anxiety_score')}</b>, depression "
-            f"<b>{_pa('olahraga','depression_score')}</b>, self-esteem tertinggi "
-            f"<b>{_pa('olahraga','self_esteem_score')}</b>. "
-            f"Pengguna <b>Membaca</b> berada di antara keduanya (anxiety: {_pa('membaca','anxiety_score')}, "
-            f"depression: {_pa('membaca','depression_score')}, self-esteem: {_pa('membaca','self_esteem_score')}), "
-            "membentuk spektrum kondisi psikologis yang gradual antar ketiga jenis aktivitas."
-        )
+    # BQ5: Durasi Rekomendasi
+    section_header("BQ5", "Durasi Rekomendasi per Aktivitas & Waktu Luang")
 
-    # BQ5: Durasi Aktivitas
-    with a3_r:
-        section_header("BQ5", "Durasi Rekomendasi per Aktivitas")
+    bq5_l, bq5_r = st.columns(2)
+
+    # Data waktu luang
+    dff_wl = dff.copy()
+    dff_wl["Waktu Luang"] = dff_wl["waktu_luang_mnt"].apply(
+        lambda x: "> 90 mnt" if x > 90 else "≤ 90 mnt"
+    )
+    dur_wl_series = dff_wl.groupby("Waktu Luang")["durasi_menit"].mean().round(1)
+    dur_panjang   = float(dur_wl_series.get("> 90 mnt", 0))
+    dur_pendek    = float(dur_wl_series.get("≤ 90 mnt", 0))
+    pct_wl_tinggi = (dff_wl["Waktu Luang"] == "> 90 mnt").mean() * 100
+    pct_lebih_panjang = ((dur_panjang - dur_pendek) / dur_pendek * 100) if dur_pendek > 0 else 0
+
+    with bq5_l:
         dur_by_act = dff.groupby("aktivitas_dipilih")["durasi_menit"].mean().reset_index()
         dur_by_act.columns = ["Aktivitas", "Durasi Rata-rata (mnt)"]
+        dur_by_act["Aktivitas"] = dur_by_act["Aktivitas"].str.title()
         fig_dur = px.bar(
             dur_by_act, x="Aktivitas", y="Durasi Rata-rata (mnt)",
             color="Aktivitas",
             color_discrete_map={
-                "journaling": "#1565C0",
-                "membaca":    "#42A5F5",
-                "olahraga":   "#90CAF9",
+                "Journaling": "#1565C0",
+                "Membaca":    "#42A5F5",
+                "Olahraga":   "#90CAF9",
             },
             text="Durasi Rata-rata (mnt)",
         )
@@ -1241,22 +1274,19 @@ with tab3:
             xaxis_title="",
             yaxis_title="Durasi (menit)",
             showlegend=False,
-            yaxis_range=[0, 60],
+            yaxis_range=[0, 65],
+            height=320,
         )
         apply_grid(fig_dur)
         plotly_chart(fig_dur)
 
-        # Pengaruh Waktu Luang
-        dff_wl = dff.copy()
-        dff_wl["Waktu Luang"] = dff_wl["waktu_luang_mnt"].apply(
-            lambda x: "> 90 mnt" if x > 90 else "≤ 90 mnt"
-        )
-        dur_wl = dff_wl.groupby("Waktu Luang")["durasi_menit"].mean().reset_index()
-        dur_wl.columns = ["Waktu Luang", "Durasi Rata-rata (mnt)"]
+    with bq5_r:
+        dur_wl_df = dff_wl.groupby("Waktu Luang")["durasi_menit"].mean().reset_index()
+        dur_wl_df.columns = ["Waktu Luang", "Durasi Rata-rata (mnt)"]
         fig_wl = px.bar(
-            dur_wl, x="Waktu Luang", y="Durasi Rata-rata (mnt)",
+            dur_wl_df, x="Waktu Luang", y="Durasi Rata-rata (mnt)",
             color="Waktu Luang",
-            color_discrete_sequence=["#1976D2", "#90CAF9"],
+            color_discrete_map={"> 90 mnt": "#1565C0", "≤ 90 mnt": "#90CAF9"},
             text="Durasi Rata-rata (mnt)",
         )
         fig_wl.update_traces(
@@ -1268,60 +1298,110 @@ with tab3:
             **PLOTLY_LAYOUT,
             title="Pengaruh Waktu Luang terhadap Durasi Rekomendasi",
             showlegend=False,
-            yaxis_range=[0, 55],
+            yaxis_range=[0, 65],
             xaxis_title="",
             yaxis_title="Durasi (menit)",
+            height=320,
         )
         apply_grid(fig_wl)
         plotly_chart(fig_wl)
 
-        dur_wl_series = dff_wl.groupby("Waktu Luang")["durasi_menit"].mean().round(1)
-        dur_panjang = float(dur_wl_series.get("> 90 mnt", 0))
-        dur_pendek  = float(dur_wl_series.get("≤ 90 mnt", 0))
-        pct_wl_tinggi = (dff_wl["Waktu Luang"] == "> 90 mnt").mean() * 100
-        pct_lebih_panjang = ((dur_panjang - dur_pendek) / dur_pendek * 100) if dur_pendek > 0 else 0
+    # Insight BQ5
+    dur_by_act_agg = dff.groupby("aktivitas_dipilih")["durasi_menit"].mean().round(1)
+    act_dur_max = dur_by_act_agg.idxmax() if not dur_by_act_agg.empty else "-"
+    act_dur_min = dur_by_act_agg.idxmin() if not dur_by_act_agg.empty else "-"
+    dur_max_val = float(dur_by_act_agg.max()) if not dur_by_act_agg.empty else 0
+    dur_min_val = float(dur_by_act_agg.min()) if not dur_by_act_agg.empty else 0
 
-        insight(
-            f"Responden dengan waktu luang <b>&gt; 90 menit</b> ({pct_wl_tinggi:.1f}% dari total terfilter) "
-            f"menerima rekomendasi durasi rata-rata <b>{dur_panjang} menit</b>, sedangkan kelompok "
-            f"<b>≤ 90 menit</b> hanya <b>{dur_pendek} menit</b> — selisih "
-            f"<b>{dur_panjang - dur_pendek:.1f} menit</b> atau sekitar "
-            f"<b>{pct_lebih_panjang:.1f}% lebih panjang</b>. "
-            "Pola ini mengkonfirmasi bahwa sistem rekomendasi MindCare telah menyesuaikan intensitas "
-            "intervensi secara proporsional dengan ketersediaan waktu pengguna. "
-            "<b>Waktu luang merupakan variabel konteks penting</b> dalam menentukan rekomendasi yang "
-            "realistis dan dapat dipatuhi pengguna."
-        )
+    insight(
+        f"<b>Durasi rekomendasi berbeda signifikan antar jenis aktivitas:</b> "
+        f"<b>{act_dur_max.title()}</b> mendapat rekomendasi terpanjang rata-rata <b>{dur_max_val} menit</b>, "
+        f"sementara <b>{act_dur_min.title()}</b> hanya <b>{dur_min_val} menit</b> selisih "
+        f"<b>{dur_max_val - dur_min_val:.1f} menit</b>. Ini menunjukkan bahwa intensitas sesi "
+        "disesuaikan dengan karakteristik tiap aktivitas, bukan seragam. "
+        f"Ketersediaan waktu luang memperkuat perbedaan ini: responden dengan waktu luang "
+        f"<b>&gt; 90 menit</b> ({pct_wl_tinggi:.1f}% dari total) menerima durasi rata-rata "
+        f"<b>{dur_panjang} menit</b>, dibanding kelompok <b>≤ 90 menit</b> yang hanya "
+        f"<b>{dur_pendek} menit</b> dimana <b>{pct_lebih_panjang:.1f}% lebih panjang</b>. "
+    )
 
     divider()
 
+    # Heatmap Tujuan Utama per Aktivitas
     section_header("ANALISIS", "Tujuan Utama per Jenis Aktivitas")
+
     heat_data = (
         pd.crosstab(dff["aktivitas_dipilih"], dff["tujuan_utama"], normalize="index") * 100
     ).round(1)
 
     if not heat_data.empty:
-        fig_heat = px.imshow(
-            heat_data,
-            color_continuous_scale=["#EFF6FF", "#DBEAFE", "#1565C0"],
-            text_auto=".1f",
-            aspect="auto",
-        )
-        fig_heat.update_layout(
-            **PLOTLY_LAYOUT,
-            title="Proporsi Tujuan Utama per Aktivitas (%)",
-            xaxis_title="",
-            yaxis_title="",
-            coloraxis_showscale=False,
-            height=260,
-        )
-        plotly_chart(fig_heat)
+        heat_chart_col, heat_insight_col = st.columns([3, 2])
+
+        with heat_chart_col:
+            fig_heat = px.imshow(
+                heat_data,
+                color_continuous_scale=["#EFF6FF", "#DBEAFE", "#1565C0"],
+                text_auto=".1f",
+                aspect="auto",
+            )
+            fig_heat.update_layout(
+                **PLOTLY_LAYOUT,
+                title="Proporsi Tujuan Utama per Aktivitas (%)",
+                xaxis_title="Tujuan Utama",
+                yaxis_title="Aktivitas",
+                coloraxis_showscale=True,
+                coloraxis_colorbar=dict(
+                    title="(%)",
+                    thickness=12,
+                    len=0.8,
+                    tickfont=dict(size=10),
+                ),
+                height=280,
+            )
+            fig_heat.update_layout(margin=dict(l=16, r=60, t=44, b=16))
+            fig_heat.update_xaxes(tickangle=-20, tickfont=dict(size=11))
+            plotly_chart(fig_heat)
+
+        with heat_insight_col:
+            st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+            if not heat_data.empty:
+                
+                dom_goals = heat_data.idxmax(axis=1)  
+                dom_pcts  = heat_data.max(axis=1)    
+
+                lines = []
+                for act in heat_data.index:
+                    goal = dom_goals.get(act, "-")
+                    pct  = dom_pcts.get(act, 0)
+                    lines.append(
+                        f"<b>{act.title()}</b> → <b>{goal}</b> ({pct:.1f}%)"
+                    )
+                dom_summary = "<br>".join(lines)
+
+                # Proses Mencari tujuan yang paling merata (std rendah) vs paling terfokus (std tinggi)
+                goal_std  = heat_data.std(axis=0)
+                most_uniq = goal_std.idxmax() if not goal_std.empty else "-"
+                most_even = goal_std.idxmin() if not goal_std.empty else "-"
+
+                st.markdown(f"""
+                <div class="insight-box" style="margin-top:0; height:calc(100% - 0.5rem);">
+                    <b>Tujuan dominan per aktivitas:</b><br>
+                    {dom_summary}<br><br>
+                    Pola ini mengungkap bahwa setiap aktivitas memiliki
+                    <i>target psikologis yang berbeda</i>. Tujuan
+                    <b>"{most_uniq}"</b> paling eksklusif
+                    hanya dipilih oleh pengguna aktivitas tertentu, mengindikasikan
+                    kebutuhan yang sangat spesifik. Sebaliknya,
+                    <b>"{most_even}"</b> tersebar merata lintas aktivitas,
+                    menunjukkan bahwa tujuan ini bersifat universal dan tidak
+                    menjadi pembeda utama antar jenis intervensi.
+                </div>
+                """, unsafe_allow_html=True)
     else:
         st.info("Data tidak cukup untuk menampilkan heatmap tujuan utama.")
 
 
 # TAB 4: RINGKASAN TEMUAN
-
 with tab4:
 
     section_header("RINGKASAN", "Business Questions & Temuan Kunci")
